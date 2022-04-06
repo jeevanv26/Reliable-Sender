@@ -170,7 +170,17 @@ def send_reliable(cs, filedata, receiver_binding, win_size):
     # TODO: This is where you will make your changes. You
     # will not need to change any other parts of this file.
     while win_left_edge < INIT_SEQNO + content_len:
-        win_left_edge = transmit_one()
+        if( iteration == 1)
+            win_left_edge = transmit_one()
+        readable, writable, errors = select.select(sockets,[], [], RTO)
+        if not readable:
+            transmit_one()
+        if readable:
+            data_from_receiver, receiver_addr = readable.recvfrom(100)
+            ack_msg = Msg.deserialize(data_from_receiver)
+            print("Received    {}".format(str(ack_msg)))
+            win_left_edge = transmit_one()
+         iteration++
 
 if __name__ == "__main__":
     args = parse_args()

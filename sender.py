@@ -82,7 +82,7 @@ def get_filedata(filename):
 
 #### Chunk a large string into fixed size chunks.
 #### The first chunk is a string with the number of
-#### following chunks. 
+#### following chunks.
 #### `seq_to_msgindex` tracks the index of the packet
 #### that will contain a given sequence number as its
 #### starting sequence number.
@@ -169,18 +169,21 @@ def send_reliable(cs, filedata, receiver_binding, win_size):
 
     # TODO: This is where you will make your changes. You
     # will not need to change any other parts of this file.
+    sockets = [cs]
+    iteration = 1;
     while win_left_edge < INIT_SEQNO + content_len:
-        if( iteration == 1)
+        if iteration == 1:
             win_left_edge = transmit_one()
         readable, writable, errors = select.select(sockets,[], [], RTO)
         if not readable:
             transmit_one()
         if readable:
-            data_from_receiver, receiver_addr = readable.recvfrom(100)
+            data_from_receiver, receiver_addr = readable[0].recvfrom(100)
             ack_msg = Msg.deserialize(data_from_receiver)
             print("Received    {}".format(str(ack_msg)))
             win_left_edge = transmit_one()
-         iteration++
+        iteration+=1
+
 
 if __name__ == "__main__":
     args = parse_args()

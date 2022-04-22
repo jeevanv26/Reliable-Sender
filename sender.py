@@ -183,8 +183,8 @@ def send_reliable(cs, filedata, receiver_binding, win_size):
         if readable:
             data_from_receiver, receiver_addr = readable[0].recvfrom(100)
             ack_msg = Msg.deserialize(data_from_receiver)
-            if(last_acked != Msg.ack):
-                last_acked = Msg.ack
+            if(last_acked != ack_msg.ack):
+                last_acked = ack_msg.ack
                 win_left_edge = last_acked
                 win_right_edge = min(win_left_edge + win_size, INIT_SEQNO + content_len)
                 first_to_tx = transmit_entire_window_from(first_to_tx)

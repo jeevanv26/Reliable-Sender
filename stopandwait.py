@@ -181,8 +181,9 @@ def send_reliable(cs, filedata, receiver_binding, win_size):
             data_from_receiver, receiver_addr = readable[0].recvfrom(100)
             ack_msg = Msg.deserialize(data_from_receiver)
             print("Received    {}".format(str(ack_msg)))
-            transmit_one()
             win_left_edge = ack_msg.ack
+            if(win_left_edge < INIT_SEQNO + content_len):
+                transmit_one()
         iteration+=1
 
 
